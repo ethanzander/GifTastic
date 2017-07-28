@@ -1,70 +1,81 @@
-$( document ).ready(function() {
-	// Variables
-	var searchArry = ["new search", "old search"];
-
-	// Set All Functions
-	function addSearchButton () {
-		// var newButon = $('#new-search-data').val()
-		alert("You clicked the new search button!");
-	};
-
-	//Logic
-	
-
-
-      // MAJOR TASK #1: DYNAMICALLY CREATE BUTTONS
-      // =================================================================================
-
-      // // 1. Create a for-loop to iterate through the letters array.
-      // for(i = 0; i < searchArry.length; i++){
-      // // Inside the loop...
-
-      // // 2. Create a variable named "letterBtn" equal to $("<button>");
-      // var newBtn = $("<button>");
-      // // 3. Then give each "letterBtn" the following classes: "letter-button" "letter" "letter-button-color".
-      // newBtn.addClass("btn btn-success");
-      // // 4. Then give each "letterBtn" a data-attribute called "data-letter", with a value eqaual to "letters[i]"
-      // newBtn.attr("data-search", searchArry[i]);
-      // // 5. Then give each "letterBtn" a text equal to "letters[i]".
-      // newBtn.text(searchArry[i]);
-      // // letterBtn.attr("onclick", onClick());
-      // // 6. Finally, append each "letterBtn" to the "#buttons" div (provided).
-      // $('#buttons').append(newBtn);
-      // }
-
-      // Be sure to test that your code works for this major task, before proceeding to the next one!
-
-      // MAJOR TASK #2: ATTACH ON-CLICK EVENTS TO "LETTER" BUTTONS
-      // =================================================================================
-
-      // 7. Create an "on-click" event attached to the ".letter-button" class.
-      $('#add-search-button').on("click", function(){
-      // Inside the on-click event...
-
-      // 8. Create a variable called "fridgeMagnet" and set the variable equal to a new div.
-      var newBtn = $("<button>");
-      // 9. Give each "fridgeMagnet" the following classes: "letter fridge-color".
-      newBtn.addClass("btn btn-success");
-      // 10. Then chain the following code onto the "fridgeMagnet" variable: .text($(this).attr("data-letter"))
-      newBtn.text($(this).attr("data-search", searchArry[i]));
-      // 11. Lastly append the fridgeMagnet variable to the "#display" div (provided);
-      $('#buttons').append(newBtn);
-      // Be sure to test that your code works for this major task, before proceeding to the next one!
+$(document).ready(function(){
+      $('button').on('click', function(){
+            var animal =$(this).data('name');
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=d35cc99ccbac4529900a4030670ac59f";
+            $.ajax({
+                  url: queryURL,
+                  method: 'GET'
+            })
+            .done(function(response){
+                  //console.log(response);
+                  var results = response.data;
+                  for (var i = 0; i<results.length; i++) {
+                        var animalDiv = $('<div>');
+                        var p = $('<p>');
+                        p.text(results[i].rating);
+                        var animalImage = $('<img/>');
+                        animalImage.addclass('anImg');
+                        animalImage.attr('src', results[i].images.fixed_height.url);
+                        animalImage.attr('data-still', results[i].images.fixed_height.url);
+                        animalImage.attr('data-animate', results[i].images.fixed_height.url);
+                        animalImage.attr('data-state', 'still');
+                        animalDiv.append(p);
+                        animalDiv.append(animalImage);
+                        animalDiv.prependTo($('#gifs'));
+                  }
+                  $('.anImg').on('click', function(){
+                        var state = $(this).attr('data-state');
+                        //console.log(this);
+                        if (state === 'still') {
+                              $(this).attr('src', $(this).data('animate'));
+                              $(this).attr('data-state', 'animate');
+                        } else {
+                              $('.anImg').attr('src', $(this).data('still'));
+                              $(this).attr('data-state', 'still');
+                        }
+                  });
+            });
       });
-      // MAJOR TASK #3: ATTACH ON-CLICK EVENTS TO "CLEAR" BUTTON
-      // =================================================================================
-
-      // 12. Create an "on-click" event attached to the "#clear" button id.
-      $('#clear').on("click", function(){
-        $('#display').empty();
-      });
-      // Inside the on-click event...
-
-      // 13. Use the jQuery "empty()" method to clear the contents of the "#display" div.
-
-    });
-
-
-//End document.ready
+      var amimals = [''];
+      $('#add-search-button').on('click', function(){
+            var animalButton = $('#gif-input').val();
+            var newButton = $('<button/>').addclass('btn btn-primary animal').attr('data-name', animalButton).html(animalButton).css({'margin': '5px'});
+            $('#buttons').append(newButton);
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animalButton + "&api_key=d35cc99ccbac4529900a4030670ac59f";
+            //console.log(animalButton);
+            $.ajax({
+                  url: queryURL,
+                  method: 'GET'
+            })
+            .done(function(response){
+                  var results = response.data;
+                  for (var i = 0; i<results.length; i++) {
+                        var animalDiv = $('<div>');
+                        var p = $('<p>');
+                        p.text(results[i].rating);
+                        var animalImage = $('<img/>');
+                        animalImage.addclass('anImg');
+                        animalImage.attr('src', results[i].images.fixed_height.url);
+                        animalImage.attr('data-still', results[i].images.fixed_height.url);
+                        animalImage.attr('data-animate', results[i].images.fixed_height.url);
+                        animalImage.attr('data-state', 'still');
+                        animalDiv.append(p);
+                        animalDiv.append(animalImage);
+                        animalDiv.prependTo($('#gifs'));
+                  }
+                  $('.anImg').on('click', function(){
+                        var state = $(this).attr('data-state');
+                        //console.log(this);
+                        if (state === 'still') {
+                              $(this).attr('src', $(this).data('animate'));
+                              $(this).attr('data-state', 'animate');
+                        } else {
+                              $('.anImg').attr('src', $(this).data('still'));
+                              $(this).attr('data-state', 'still');
+                        }
+                  });
+            });
+            $('#gif-input').val('');
+            return false;
+      });   
 });
-

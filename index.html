@@ -2,28 +2,36 @@
 <html>
 <head>
 	<title>GifTastic</title>
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<!-- Bootstrap override CSS -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
-	<meta charset="utf-8"/>
 </head>
 <body>
-	<div class="container">
-		<h2>Add a new search button here.</h2>
-		<div>
-			<input type="text" id="gif-input">
-			<button type="submit" id="add-search-button" class="btn btn-primary">Add Animal Search</button> 
+	<div class="container-fluid">
+		<div class="jumbotron">
+			<h1>GifTastic!</h1>
+			<p>Do you want to find the perfect gif? Type what your are looking for into the box to add it to your search buttons. Then you can click the search button to get 10 gifs. Click on any gif to watch it play.</p>
 		</div>
-		<div id="buttons"></div>
-		<div id="display-gifs"></div>
+	<div class="panel panel-default col-lg-3">
+  		<div class="panel-body">
+    		<form id="new-search-topic">
+				<label for="entry">Add a new search button here.</label> <br>
+				<input type="text" name="search">
+				<input class="btn btn-success" type="submit" name="submit" id="add-btn">
+			</form>
+  		</div>
 	</div>
-
-
-<!-- JQuery -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
-<!-- My game logic -->
-<script type="text/javascript" src="assets/javascript/gifLogic.js"></script>
-
+	<div class="panel panel-default col-lg-8">
+  		<div class="panel-heading">
+    		<h3 class="panel-title">Your search buttons:</h3>
+  		</div>
+  		<div class="panel-body" id="new-btns">
+    		Panel content
+  		</div>
+	</div>
+	<div class="panel panel-default col-lg-12">
+  		<div class="panel-body" id="gifDiv"></div>
+	</div>
+<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="assets/javascript/gifLogic.js" ></script>
 </body>
 </html>

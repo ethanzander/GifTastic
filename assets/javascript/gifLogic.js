@@ -1,81 +1,54 @@
-$(document).ready(function(){
-      $('button').on('click', function(){
-            var animal =$(this).data('name');
-            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=d35cc99ccbac4529900a4030670ac59f";
-            $.ajax({
-                  url: queryURL,
-                  method: 'GET'
-            })
-            .done(function(response){
-                  //console.log(response);
-                  var results = response.data;
-                  for (var i = 0; i<results.length; i++) {
-                        var animalDiv = $('<div>');
-                        var p = $('<p>');
-                        p.text(results[i].rating);
-                        var animalImage = $('<img/>');
-                        animalImage.addclass('anImg');
-                        animalImage.attr('src', results[i].images.fixed_height.url);
-                        animalImage.attr('data-still', results[i].images.fixed_height.url);
-                        animalImage.attr('data-animate', results[i].images.fixed_height.url);
-                        animalImage.attr('data-state', 'still');
-                        animalDiv.append(p);
-                        animalDiv.append(animalImage);
-                        animalDiv.prependTo($('#gifs'));
-                  }
-                  $('.anImg').on('click', function(){
-                        var state = $(this).attr('data-state');
-                        //console.log(this);
-                        if (state === 'still') {
-                              $(this).attr('src', $(this).data('animate'));
-                              $(this).attr('data-state', 'animate');
-                        } else {
-                              $('.anImg').attr('src', $(this).data('still'));
-                              $(this).attr('data-state', 'still');
-                        }
-                  });
-            });
+// Set all GLOBALVariables
+var inputArray = [];
+newBtn(inputArray);
+//Set all Functions
+function makeBtn(){
+      queryURL = "https://api.giphy.com/v1/gifs/search?q=" + $(this).text() + "&api_key=d35cc99ccbac4529900a4030670ac59f" + "&limit=10&rating=g&rating=pg";
+      $.ajax({
+            url: queryURL,
+            method: "GET"
+      }).done(function(response){
+            //console.log(response);
+            addGifs(response);
       });
-      var amimals = [''];
-      $('#add-search-button').on('click', function(){
-            var animalButton = $('#gif-input').val();
-            var newButton = $('<button/>').addclass('btn btn-primary animal').attr('data-name', animalButton).html(animalButton).css({'margin': '5px'});
-            $('#buttons').append(newButton);
-            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animalButton + "&api_key=d35cc99ccbac4529900a4030670ac59f";
-            //console.log(animalButton);
-            $.ajax({
-                  url: queryURL,
-                  method: 'GET'
-            })
-            .done(function(response){
-                  var results = response.data;
-                  for (var i = 0; i<results.length; i++) {
-                        var animalDiv = $('<div>');
-                        var p = $('<p>');
-                        p.text(results[i].rating);
-                        var animalImage = $('<img/>');
-                        animalImage.addclass('anImg');
-                        animalImage.attr('src', results[i].images.fixed_height.url);
-                        animalImage.attr('data-still', results[i].images.fixed_height.url);
-                        animalImage.attr('data-animate', results[i].images.fixed_height.url);
-                        animalImage.attr('data-state', 'still');
-                        animalDiv.append(p);
-                        animalDiv.append(animalImage);
-                        animalDiv.prependTo($('#gifs'));
-                  }
-                  $('.anImg').on('click', function(){
-                        var state = $(this).attr('data-state');
-                        //console.log(this);
-                        if (state === 'still') {
-                              $(this).attr('src', $(this).data('animate'));
-                              $(this).attr('data-state', 'animate');
-                        } else {
-                              $('.anImg').attr('src', $(this).data('still'));
-                              $(this).attr('data-state', 'still');
-                        }
-                  });
-            });
-            $('#gif-input').val('');
-            return false;
-      });   
+}
+function newBtn(array){
+      $("#new-btns").empty();
+      for (var i = 0; i < array.length; i++) {
+            $("#new-btns").append('<button class="search-btn btn btn-primary">' + array[i] + '</button>');
+      }
+}
+function addGifs(obj){
+      var addDiv;
+      $("#gifDiv").empty();
+      for (var i = 0; i < obj.data.length; i++) {
+            addDiv = $('<div class="gif"></div>');
+            $("#gifDiv").append(addDiv);
+            console.log(addDiv);
+            stillGif = $('<img src="' + obj.data[i].images.fixed_height_still.url + '">');
+            addDiv.append(stillGif);
+            addDiv.append('<p class="rating">Rating: '+ obj.data[i].rating +"</p>");
+            stillGif.attr("data-state","still");
+            stillGif.attr("data-animateURL", obj.data[i].images.fixed_height.url);
+            stillGif.attr("data-stillURL", obj.data[i].images.fixed_height_still.url);
+      }
+}
+function pausePlay(){
+      if($(this).attr("data-state")==="still"){
+            $(this).attr("src", $(this).attr("data-animateURL"));
+            $(this).attr("data-state","animated");
+      }
+      else{
+            $(this).attr("src", $(this).attr("data-stillURL"));
+            $(this).attr("data-state","still");
+      }
+}
+//Page Logic
+$(document).on("click",".search-btn", makeBtn);
+$(document).on("click","img", pausePlay);
+$("#new-search-topic").submit(function(event){
+      inputArray.push($(this).children().eq(2).val());
+      newBtn(inputArray);
+      $(this).children().eq(2).val("");
+      event.preventDefault();
 });
